@@ -1,0 +1,32 @@
+17:10:51 Raven.Client.Document.SessionOperations.QueryOperation Executing query 'ReceivedDate:[* TO 2013-09-24T00:00:00.0000000]' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+17:10:51 Raven.Client.Document.SessionOperations.QueryOperation Query returned 0/0 results
+17:10:52 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+17:10:52 Raven.Client.Document.SessionOperations.QueryOperation Query returned 0/2 results
+17:10:52 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+17:10:52 Raven.Client.Document.SessionOperations.QueryOperation Query returned 2/2 results
+17:10:59 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+17:10:59 Raven.Client.Document.SessionOperations.QueryOperation Query returned 0/2 results
+17:10:59 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+17:10:59 Raven.Client.Document.SessionOperations.QueryOperation Query returned 2/2 results
+17:10:04 Raven.Client.Document.SessionOperations.LoadOperation Loading document [messages/33] from http://localhost:8080 (DB: mailtrap);mailtrap
+17:10:09 Raven.Client.Document.SessionOperations.LoadOperation Loading document [messages/33] from http://localhost:8080 (DB: mailtrap);mailtrap
+18:10:20 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+18:10:20 Raven.Client.Document.SessionOperations.QueryOperation Query returned 0/101 results
+18:10:20 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+18:10:20 Raven.Client.Document.SessionOperations.QueryOperation Query returned 20/101 results
+18:10:30 Raven.Client.Document.SessionOperations.LoadOperation Loading document [messages/163] from http://localhost:8080 (DB: mailtrap);mailtrap
+18:10:42 Raven.Client.Document.SessionOperations.LoadOperation Loading document [messages/162] from http://localhost:8080 (DB: mailtrap);mailtrap
+18:10:54 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+18:10:54 Raven.Client.Document.SessionOperations.QueryOperation Query returned 0/101 results
+18:10:54 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+18:10:54 Raven.Client.Document.SessionOperations.QueryOperation Query returned 20/101 results
+18:10:57 Raven.Client.Document.SessionOperations.LoadOperation Loading document [messages/137] from http://localhost:8080 (DB: mailtrap);mailtrap
+18:10:01 Raven.Client.Document.SessionOperations.LoadOperation Loading document [messages/124] from http://localhost:8080 (DB: mailtrap);mailtrap
+18:10:29 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+18:10:29 Raven.Client.Document.SessionOperations.QueryOperation Query returned 0/101 results
+18:10:29 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+18:10:29 Raven.Client.Document.SessionOperations.QueryOperation Query returned 20/101 results
+18:10:31 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+18:10:31 Raven.Client.Document.SessionOperations.QueryOperation Query returned 0/101 results
+18:10:31 Raven.Client.Document.SessionOperations.QueryOperation Executing query '' on index 'dynamic/Messages' in 'http://localhost:8080 (DB: mailtrap);mailtrap'
+18:10:31 Raven.Client.Document.SessionOperations.QueryOperation Query returned 20/101 results
