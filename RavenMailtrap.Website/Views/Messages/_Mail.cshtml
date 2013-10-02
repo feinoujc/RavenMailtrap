@@ -2,7 +2,7 @@
 
 
 <div>
-    @Html.ActionLink("View Original", "View", new { Model.Id }, new{title="Open the original email (Requires a mail client installed like Outlook, Thunderbird, etc...)"})
+    @Html.ActionLink("View Original", "Download", new { Model.Id }, new{title="Open the original email (Requires a mail client installed like Outlook, Thunderbird, etc...)"})
     <h3>@Html.DisplayNameFor(m => m.From): @Html.DisplayFor(m => m.From)</h3>
     <h3>@Html.DisplayNameFor(m => m.To): @string.Join(", ", Model.To)</h3>
     <h3>@Html.DisplayNameFor(m => m.Subject): @Html.DisplayFor(m => m.Subject)</h3>

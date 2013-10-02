@@ -23,6 +23,7 @@ namespace RavenMailtrap.Website.Controllers
 
         public IDocumentSession RavenSession { get; protected set; }
 
+        [HttpGet]
         public ActionResult Index(int? page, GridSortOptions sort)
         {
             IQueryable<Message> query = RavenSession.Query<Message>();
@@ -35,6 +36,7 @@ namespace RavenMailtrap.Website.Controllers
             return View(query.AsPagination(page ?? 1));
         }
 
+        [HttpGet]
         public ActionResult Details(string id)
         {
             var message = RavenSession.Load<Message>(id);
@@ -43,7 +45,8 @@ namespace RavenMailtrap.Website.Controllers
             return PartialView("_Mail", message);
         }
 
-        public ActionResult View(string id)
+        [HttpGet]
+        public ActionResult Download(string id)
         {
             Attachment attachment = Store.DatabaseCommands.GetAttachment(id);
             if (attachment == null)
@@ -51,13 +54,23 @@ namespace RavenMailtrap.Website.Controllers
             return Email(attachment, id);
         }
 
-        public async Task<ActionResult> MostRecentEmail(string to)
+        /// <summary>
+        /// Get the most recent email to a recipient /Messages/MostRecentEmail?to=Ayende%40Rahien.com
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="within">Email must be within the last N minutes. (Default is 10 minutes)</param>
+        /// <returns>The email in message/rfc822 format. Returns 404 if no email found.</returns>
+        [HttpGet]
+        public async Task<ActionResult> MostRecentEmail(string to, int within = 10)
         {
+            //if called from an integration test, we may need to wait until the email gets sent
+            //so keep trying until we find something or we exhaust all retries
             int retries = 0;
             Message email = null;
             while (retries < 10)
             {
                 IQueryable<Message> query = RavenSession.Query<Message>()
+                                                        .Where(message => message.Header.DateSent >= DateTime.UtcNow.AddMinutes(-within))
                                                         .OrderByDescending(message => message.ReceivedDate);
 
                 if (!string.IsNullOrEmpty(to))
@@ -84,31 +97,7 @@ namespace RavenMailtrap.Website.Controllers
             return HttpNotFound("Could not find an email " + to);
         }
 
-        private ActionResult Email(Attachment attachment, string id)
-        {
-            return File(attachment.Data(), "message/rfc822", id + "." + attachment.Metadata["Format"]);
-        }
-
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            RavenSession = Store.OpenSession();
-        }
-
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-            if (filterContext.IsChildAction)
-                return;
-
-            using (RavenSession)
-            {
-                if (filterContext.Exception != null)
-                    return;
-
-                if (RavenSession != null)
-                    RavenSession.SaveChanges();
-            }
-        }
-
+        [HttpGet]
         public ActionResult HtmlContent(string id)
         {
             Attachment attachment = Store.DatabaseCommands.GetAttachment(id);
@@ -149,5 +138,32 @@ namespace RavenMailtrap.Website.Controllers
                             plain.GetBodyAsText()), "text/html", plain.BodyEncoding);
             }
         }
+
+        private ActionResult Email(Attachment attachment, string id)
+        {
+            return File(attachment.Data(), "message/rfc822", id + "." + attachment.Metadata["Format"]);
+        }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            RavenSession = Store.OpenSession();
+        }
+
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            if (filterContext.IsChildAction)
+                return;
+
+            using (RavenSession)
+            {
+                if (filterContext.Exception != null)
+                    return;
+
+                if (RavenSession != null)
+                    RavenSession.SaveChanges();
+            }
+        }
+
+        
     }
 }

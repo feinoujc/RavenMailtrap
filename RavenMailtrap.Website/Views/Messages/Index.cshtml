@@ -3,18 +3,9 @@
 @using MvcContrib.UI.Grid
 @using RavenMailtrap.Model
 
-
-
 @model IEnumerable<Message>
 @{
     ViewBag.Title = "Home Page";
-}
-
-
-@section featured
-{
-    <style>
-    </style>
 }
 
 @Html.Grid(Model).Columns(columns =>
@@ -26,7 +17,8 @@
     columns.For(m => m.ServerHostName).Named("Server").Sortable(true);
     columns.For(m => Html.ActionLink("View", "Details", new { id = m.Id }, new { @class = "details_link" }));
 }).Sort(ViewBag.Sort ?? new GridSortOptions())
-@Html.Raw(Html.Pager(Model as IPagination))
+
+@Html.Raw(Html.Pager((IPagination)Model))
 
 
 <div id="mail_dialog">
@@ -35,6 +27,13 @@
 @section scripts
 {
     <script type="text/javascript">
+        setInterval(function() {
+            var dialog = $('#mail_dialog').data('dialog');
+            if (!dialog || !dialog.isOpen) {
+                window.location.reload();
+            }
+        }, 20000);
+
         $('.details_link').on('click', function (evt) {
             evt.preventDefault();
 
@@ -48,7 +47,7 @@
                     height: 'auto',
                     modal: true,
                     close: function () {
-                        container.dialog('destroy');
+                        container.dialog('destroy');                   
                     }
                 });
 
