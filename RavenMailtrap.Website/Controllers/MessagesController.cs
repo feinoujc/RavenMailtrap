@@ -7,6 +7,7 @@ using HtmlAgilityPack;
 using MvcContrib.Pagination;
 using MvcContrib.Sorting;
 using MvcContrib.UI.Grid;
+using NLog;
 using OpenPop.Mime;
 using Raven.Abstractions.Data;
 using Raven.Client;
@@ -144,6 +145,12 @@ namespace RavenMailtrap.Website.Controllers
             return File(attachment.Data(), "message/rfc822", id + "." + attachment.Metadata["Format"]);
         }
 
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            Log.ErrorException("An error occurred. " + filterContext.Exception.Message, filterContext.Exception);
+            base.OnException(filterContext);
+        }
+
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             RavenSession = Store.OpenSession();
@@ -164,6 +171,8 @@ namespace RavenMailtrap.Website.Controllers
             }
         }
 
-        
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+
     }
 }

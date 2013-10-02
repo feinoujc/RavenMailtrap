@@ -36,7 +36,7 @@ namespace RavenMailtrap.Website
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             LogManager.Configuration = GetDefaultLoggingConfiguration();
-            Store = new DocumentStore {ConnectionStringName = "Mailtrap"};
+            Store = new DocumentStore { ConnectionStringName = "Mailtrap" };
             Store.Initialize();
 
             IndexCreation.CreateIndexes(Assembly.GetCallingAssembly(), Store);
@@ -65,7 +65,7 @@ namespace RavenMailtrap.Website
                         }
                         catch (Exception e)
                         {
-                            LogManager.GetLogger("Web").ErrorException("The purge process failed.", e);
+                            LogManager.GetLogger("Web").ErrorException("The purge process failed. " + e, e);
                         }
                     });
             }

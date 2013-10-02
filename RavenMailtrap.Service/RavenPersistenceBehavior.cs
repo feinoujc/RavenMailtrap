@@ -15,7 +15,7 @@ namespace RavenMailtrap.Service
 {
     public class RavenPersistenceBehavior : DefaultServerBehaviour
     {
-        private static readonly Logger Log = LogManager.GetLogger("Server");
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private readonly IDocumentStore _documentStore;
 
 

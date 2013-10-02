@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using System;
+using NLog;
 using NLog.Config;
 using NLog.Targets;
 using Topshelf;
@@ -27,9 +28,14 @@ namespace RavenMailtrap.Service
                     host.SetDescription("Raven Mailtrap Smtp Server");
                     host.SetDisplayName("MailtrapSmtpServer");
                     host.SetServiceName("MailtrapSmtpServer");
+#if TOPSHELF3
                     host.EnableServiceRecovery(recovery => recovery.RestartService(1));
                     host.StartAutomaticallyDelayed();
+#else
+                    host.StartAutomatically();
+#endif
                 });
+
         }
 
 
