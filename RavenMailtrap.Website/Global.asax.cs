@@ -83,7 +83,7 @@ namespace RavenMailtrap.Website
             config.AddTarget("file", fileTarget);
 
             // Step 3. Set target properties 
-            fileTarget.FileName = "${basedir}/log.txt";
+            fileTarget.FileName = "${basedir}/mailtrap.log";
             fileTarget.Layout = @"${date:format=HH\:MM\:ss} ${logger} ${message}";
 
             // Step 4. Define rules

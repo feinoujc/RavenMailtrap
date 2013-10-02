@@ -48,7 +48,7 @@ namespace RavenMailtrap.Service
             const string layout = @"${date:format=HH\:MM\:ss} ${logger} ${message}";
             // Step 3. Set target properties 
             consoleTarget.Layout = layout;
-            fileTarget.FileName = "${basedir}/log.txt";
+            fileTarget.FileName = "${basedir}/mailtrap.log";
             fileTarget.Layout = layout;
 
             // Step 4. Define rules
