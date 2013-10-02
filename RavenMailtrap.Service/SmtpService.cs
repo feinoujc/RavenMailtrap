@@ -6,7 +6,6 @@ namespace RavenMailtrap.Service
 {
     public class SmtpService : IDisposable
     {
-
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private Server _server;
 
@@ -25,23 +24,23 @@ namespace RavenMailtrap.Service
         {
         }
 
-
-        public void Start()
-        {
-            Log.Info("Service started");
-            _server.Start();
-        }
-
-        public void Stop()
-        {
-            Log.Info("Service stopped");
-            _server.Stop();
-        }
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+
+        public void Start()
+        {
+            _server.Start();
+            Log.Info("Service started");
+        }
+
+        public void Stop()
+        {
+            _server.Stop();
+            Log.Info("Service stopped");
         }
 
         protected virtual void Dispose(bool disposing)
@@ -55,6 +54,5 @@ namespace RavenMailtrap.Service
                 }
             }
         }
-
     }
 }

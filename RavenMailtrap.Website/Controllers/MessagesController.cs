@@ -45,7 +45,7 @@ namespace RavenMailtrap.Website.Controllers
 
         public ActionResult View(string id)
         {
-            Attachment attachment = MvcApplication.Store.DatabaseCommands.GetAttachment(id);
+            Attachment attachment = Store.DatabaseCommands.GetAttachment(id);
             if (attachment == null)
                 return HttpNotFound();
             return Email(attachment, id);
@@ -53,13 +53,13 @@ namespace RavenMailtrap.Website.Controllers
 
         public async Task<ActionResult> MostRecentEmail(string to)
         {
-            RavenSession.Advanced.AllowNonAuthoritativeInformation = false;
             int retries = 0;
             Message email = null;
             while (retries < 10)
             {
-                IQueryable<Message> query = RavenSession.Query<Message>().OrderByDescending(message => message.ReceivedDate);
-                              
+                IQueryable<Message> query = RavenSession.Query<Message>()
+                                                        .OrderByDescending(message => message.ReceivedDate);
+
                 if (!string.IsNullOrEmpty(to))
                 {
                     query = query.Where(message => message.To.Any(x => x.Equals(to, StringComparison.OrdinalIgnoreCase)));
@@ -71,12 +71,12 @@ namespace RavenMailtrap.Website.Controllers
                 {
                     break;
                 }
-                await Task.Delay(1 * 1000);
+                await Task.Delay(1*1000);
                 retries++;
             }
             if (email != null)
             {
-                Attachment attachment = MvcApplication.Store.DatabaseCommands.GetAttachment(email.Id);
+                Attachment attachment = Store.DatabaseCommands.GetAttachment(email.Id);
                 if (attachment == null)
                     return HttpNotFound("Could not find an attachment for email " + email.Id);
                 return Email(attachment, email.Id);
@@ -111,21 +111,19 @@ namespace RavenMailtrap.Website.Controllers
 
         public ActionResult HtmlContent(string id)
         {
-            Attachment attachment = MvcApplication.Store.DatabaseCommands.GetAttachment(id);
+            Attachment attachment = Store.DatabaseCommands.GetAttachment(id);
             if (attachment == null)
                 return HttpNotFound();
 
-
-            OpenPop.Mime.Message m;
-            using (var stream = new MemoryStream())
-            using (Stream otherStream = attachment.Data())
+            OpenPop.Mime.Message message;
+            using (var memoryStream = new MemoryStream())
+            using (var attachmentStream = attachment.Data())
             {
-                otherStream.CopyTo(stream);
-
-                m = new OpenPop.Mime.Message(stream.ToArray());
+                attachmentStream.CopyTo(memoryStream);
+                message = new OpenPop.Mime.Message(memoryStream.ToArray());
             }
 
-            MessagePart html = m.FindFirstHtmlVersion();
+            MessagePart html = message.FindFirstHtmlVersion();
             if (html != null)
             {
                 //add a <base target="_blank"/> so that links open in new window
@@ -134,16 +132,21 @@ namespace RavenMailtrap.Website.Controllers
                 {
                     doc.Load(s, html.BodyEncoding);
                     HtmlNode head = doc.DocumentNode.SelectSingleNode("/html/head");
-                    HtmlNode baseTag = doc.CreateElement("base");
-                    head.AppendChild(baseTag);
-                    baseTag.SetAttributeValue("target", "_blank");
+                    if (head != null)
+                    {
+                        HtmlNode baseTag = doc.CreateElement("base");
+                        head.AppendChild(baseTag);
+                        baseTag.SetAttributeValue("target", "_blank");
+                    }
                 }
                 return Content(doc.DocumentNode.OuterHtml, "text/html", doc.Encoding);
             }
             else
             {
-                MessagePart plain = m.FindFirstPlainTextVersion();
-                return Content(string.Format("<html><head><title></title><base target=\"_blank\"></base></head><body><pre>{0}</pre></body></html>", plain.GetBodyAsText()), "text/html", plain.BodyEncoding);
+                MessagePart plain = message.FindFirstPlainTextVersion();
+                return Content(string.Format(
+                            "<html><head><title></title><base target=\"_blank\"></base></head><body><pre>{0}</pre></body></html>",
+                            plain.GetBodyAsText()), "text/html", plain.BodyEncoding);
             }
         }
     }

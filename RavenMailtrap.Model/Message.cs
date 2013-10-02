@@ -8,6 +8,7 @@ namespace RavenMailtrap.Model
         {
             Header = new MessageHeader();
         }
+
         public string Id { get; set; }
         public DateTime ReceivedDate { get; set; }
         public string From { get; set; }
@@ -15,6 +16,5 @@ namespace RavenMailtrap.Model
         public string Subject { get; set; }
         public string ServerHostName { get; set; }
         public MessageHeader Header { get; set; }
-
     }
 }

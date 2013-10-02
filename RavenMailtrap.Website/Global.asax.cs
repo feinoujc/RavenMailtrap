@@ -23,13 +23,12 @@ namespace RavenMailtrap.Website
 
     public class MvcApplication : HttpApplication
     {
-        
         public static DocumentStore Store;
 
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-          
+
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -68,7 +67,6 @@ namespace RavenMailtrap.Website
                         {
                             LogManager.GetLogger("Web").ErrorException("The purge process failed.", e);
                         }
-                      
                     });
             }
         }
