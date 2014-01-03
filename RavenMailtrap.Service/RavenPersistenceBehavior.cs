@@ -58,11 +58,14 @@ namespace RavenMailtrap.Service
                         Log.Info("Stored message {0} in raven. Original message id {1}", mailMessage.Id,
                                  headers.MessageId);
                         IDatabaseCommands dbCommands = _documentStore.DatabaseCommands;
+
                         var optionalMetaData = new RavenJObject();
                         optionalMetaData["Format"] = "EML";
                         msgStream.Seek(0, SeekOrigin.Begin);
-                        dbCommands.PutAttachment(mailMessage.Id, null,
-                                                 msgStream, optionalMetaData);
+                        dbCommands.PutAttachment(mailMessage.Id, null, msgStream, optionalMetaData);
+
+                        session.Advanced.GetMetadataFor(mailMessage)["Raven-Cascade-Delete-Attachments"] = RavenJToken.FromObject(new[] { mailMessage.Id });
+
                         session.SaveChanges();
                     }
                 }

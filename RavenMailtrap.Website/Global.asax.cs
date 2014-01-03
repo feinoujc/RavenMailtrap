@@ -11,7 +11,7 @@ using System.Web.Routing;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using Raven.Client;
+using Raven.Abstractions.Data;
 using Raven.Client.Document;
 using Raven.Client.Indexes;
 using RavenMailtrap.Model;
@@ -29,14 +29,13 @@ namespace RavenMailtrap.Website
         {
             AreaRegistration.RegisterAllAreas();
 
-
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             LogManager.Configuration = GetDefaultLoggingConfiguration();
-            Store = new DocumentStore { ConnectionStringName = "Mailtrap" };
+            Store = new DocumentStore {ConnectionStringName = "Mailtrap"};
             Store.Initialize();
 
             IndexCreation.CreateIndexes(Assembly.GetCallingAssembly(), Store);
@@ -46,28 +45,27 @@ namespace RavenMailtrap.Website
             if (WebConfigurationManager.AppSettings["PurgeOldMessages"] == "true")
             {
                 Task.Factory.StartNew(() =>
+                {
+                    try
                     {
-                        try
-                        {
-                            DateTime cutOffDate = DateTime.Today.AddDays(-7);
-                            using (IDocumentSession session = Store.OpenSession())
+                        const string indexName = "WeekOldEmail";
+
+
+                        Store.DatabaseCommands.PutIndex(indexName,
+                            new IndexDefinitionBuilder<Message>
                             {
-                                foreach (Message message in
-                                    session.Query<Message>()
-                                           .Where(m => m.ReceivedDate <= cutOffDate)
-                                           .ToArray())
-                                {
-                                    Store.DatabaseCommands.DeleteAttachment(message.Id, null);
-                                    session.Delete(message);
-                                }
-                                session.SaveChanges();
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            LogManager.GetLogger("Web").ErrorException("The purge process failed. " + e, e);
-                        }
-                    });
+                                Map = documents => documents.Where(m => m.ReceivedDate <= DateTime.Today.AddDays(-7))
+                                    .Select(entity => new {})
+                            }, overwrite: true);
+
+                        Store.DatabaseCommands.DeleteByIndex(indexName,
+                            new IndexQuery(), allowStale: true);
+                    }
+                    catch (Exception e)
+                    {
+                        LogManager.GetLogger("Web").ErrorException("The purge process failed. " + e, e);
+                    }
+                });
             }
         }
 
