@@ -38,6 +38,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.0\lib\net35-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.2.1.0\lib\net35\NLog.dll</HintPath>
     </Reference>
@@ -55,19 +59,20 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Topshelf">
-      <HintPath>..\packages\Topshelf.3.1.2\lib\net35\Topshelf.dll</HintPath>
+      <HintPath>..\packages\Topshelf.2.3.0.0\lib\NET35\Topshelf.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\RavenMailtrap.Service\ForwardingBehavior.cs">
       <Link>ForwardingBehavior.cs</Link>
     </Compile>
-    <Compile Include="..\RavenMailtrap.Service\Program.cs">
-      <Link>Program.cs</Link>
+    <Compile Include="..\RavenMailtrap.Service\IStartAndStop.cs">
+      <Link>IStartAndStop.cs</Link>
     </Compile>
     <Compile Include="..\RavenMailtrap.Service\SmtpService.cs">
       <Link>SmtpService.cs</Link>
     </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

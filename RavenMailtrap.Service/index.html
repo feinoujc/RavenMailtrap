@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Raven Mailtrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+               /*
+        * Base structure
+        */
+
+               /* Move down content because we have a fixed navbar that is 50px tall */
+        body {
+            padding-top: 50px;
+        }
+        .sub-header {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+
+               /*
+        * Global add-ons
+        */
+
+               .sub-header {
+                   padding-bottom: 10px;
+                   border-bottom: 1px solid #eee;
+               }
+
+
+               /*
+        * Sidebar
+        */
+
+               /* Hide for mobile, show later */
+               .sidebar {
+                   display: none;
+               }
+
+               @media (min-width: 768px) {
+                   .sidebar {
+                       position: fixed;
+                       top: 51px;
+                       bottom: 0;
+                       left: 0;
+                       z-index: 1000;
+                       display: block;
+                       overflow-x: hidden;
+                       overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+                       background-color: #f5f5f5;
+                       border-right: 1px solid #eee;
+                   }
+               }
+
+               /* Sidebar navigation */
+
+
+               .sidebar .active {
+                   font-weight: bolder;
+               }
+
+
+               /*
+        * Main content
+        */
+
+               .main {
+                   padding: 20px;
+               }
+
+               @media (min-width: 768px) {
+                   .main {
+                       padding-right: 40px;
+                       padding-left: 40px;
+                   }
+               }
+
+               .main .page-header {
+                   margin-top: 0;
+               }
+
+               .show-more {
+                   font-weight: bolder;
+                   text-align: center;
+               }
+
+                   .show-more:hover {
+                       cursor: pointer;
+                   }
+
+               iframe[seamless] {
+                   background-color: transparent;
+                   border: 0px none transparent;
+                   padding: 0px;
+                   overflow: hidden;
+               }
+
+
+               /*
+        * Placeholder dashboard ideas
+        */
+
+               .placeholders {
+                   margin-bottom: 30px;
+                   text-align: center;
+               }
+
+                   .placeholders h4 {
+                       margin-bottom: 0;
+                   }
+
+               .placeholder {
+                   margin-bottom: 20px;
+               }
+
+                   .placeholder img {
+                       display: inline-block;
+                       border-radius: 50%;
+                   }
+    </style>
+</head>
+
+<body>
+    
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Raven Mailtrap</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://github.com/feinoujc/RavenMailtrap">Help</a></li>
+                </ul>
+                <!--<form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>-->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" ng-app="RavenMailtrap">
+        <div ui-view>
+            <i>Loading Mail...</i>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.15/angular-resource.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.js"></script>
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>
+        /*global angular*/
+        var app = angular.module('RavenMailtrap', ['ui.router', 'ngResource'])
+            .config(['$stateProvider', function ($stateProvider) {
+                    var inbox = {
+                        url: '/inbox/:id',
+                        name: 'inbox',
+                        controller: 'MailtrapController',
+                        templateProvider: [function() { return angular.element('#inbox').html(); }]
+                    }
+
+                    $stateProvider.state(inbox);
+
+                }
+            ])
+            .run(['$state', function ($state) {
+                    $state.transitionTo('inbox');
+                }
+            ]);
+
+        app.factory('Messages', [
+            '$resource', '$sce',
+            function ($resource, $sce) {
+                var messages = $resource('api/:id', { id: '@id' },
+                    {
+                        query: {
+                            url: 'api/messages/',
+                            isArray: true
+                        }
+                    }
+                );
+                messages.prototype.getRawUrl = function () {
+                    return $sce.trustAsResourceUrl('api/' + this.id + '/raw');
+                }
+                messages.prototype.getHtmlUrl = function () {
+                    return $sce.trustAsResourceUrl('api/' + this.id + '/html');
+                }
+                return messages;
+            }
+        ]);
+
+        app.filter('mailCollection', function () {
+            return function (addresses) {
+                return addresses.join("; ");
+            }
+        });
+
+        app.controller('MailtrapController', [
+            '$scope', '$log', '$timeout', 'Messages',
+            function ($scope, $log, $timeout, Messages) {
+                $scope.messages = [];
+                $scope.page = 0;
+
+                $scope.showMore = function () {
+                    $scope.page = $scope.page + 1;
+                    Messages.query({ page: $scope.page }, function (data) {
+                        $scope.messages = $scope.messages.concat(data);
+                    });
+                };
+
+
+                $scope.current = null;
+                $log.debug('in mailtrap');
+                $scope.select = function (message) {
+                    message.$get(function (data) {
+                        $scope.current = data;
+                    });
+                };
+
+                var fetchAndQueueTimeout = function () {
+                    Messages.query({ page: 0 }, function (data) {
+                        var newMessages = [];
+                        angular.forEach(data, function (m1, index) {
+                            if ($scope.messages.length <= index || $scope.messages[index].id !== m1.id) {
+                                newMessages.push(m1);
+                            }
+                        });
+
+                        $scope.messages = newMessages.concat($scope.messages);
+                        if (!$scope.current && $scope.messages.length) {
+                            $scope.select($scope.messages[0]);
+                        }
+                    });
+                    $timeout(function () {
+                        fetchAndQueueTimeout();
+                    }, 10 * 1000);
+                };
+
+                fetchAndQueueTimeout();
+            }
+        ]);
+      
+
+    </script>
+
+    <script type="text/ng-template" id="inbox">
+        <div class="col-sm-4 col-md-3 sidebar">
+            <div class="table-responsive">
+                <table class="table table-striped">
+
+                    <tbody>
+                        <tr ng-repeat="message in messages | orderBy:-'receivedDate'"
+                            ng-class="{active:current.id === message.id}" ng-click="select(message)">
+                            <td>
+                                <ul class="row list-unstyled">
+                                    <li><span class="">to:</span> {{message.to | mailCollection}}</li>
+                                    <li>from: {{message.from}}</li>
+                                    <li>subject: {{message.subject}}</li>
+                                    <li>date: {{message.receivedDate | date:'short'}}</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="show-more" ng-click="showMore()">Show more...</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main" ng-if="current">
+            <div class="row">
+                <ul class="col-sm-5 col-md-6 list-unstyled">
+                    <li>to: {{current.to | mailCollection}}</li>
+                    <li>from: {{current.from}}</li>
+                    <li ng-if="current.cc.length">cc:{{current.cc | mailCollection}}</li>
+                    <li ng-if="current.bcc.length">bcc:{{current.bcc  | mailCollection}}</li>
+                    <li>subject: {{current.subject}}</li>
+                </ul>
+                <a class="nav" href="{{current.getRawUrl()}}" target="_blank" title="Open the original email (Requires a mail client installed like Outlook, Thunderbird, etc...)">View Original</a>
+            </div>
+            <iframe seamless="seamless" scrolling="auto" width="100%" height="500" src="{{current.getHtmlUrl()}}"></iframe>
+        </div>
+    
+    </script>
+</body>
+</html>

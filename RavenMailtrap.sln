@@ -1,18 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8191F16A-9F09-45F4-96D9-2D379567F199}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\nuget.exe = .nuget\nuget.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenMailtrap.Model", "RavenMailtrap.Model\RavenMailtrap.Model.csproj", "{1EE275E9-7A76-45DA-B75F-CA0D0B0C6411}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenMailtrap.Service", "RavenMailtrap.Service\RavenMailtrap.Service.csproj", "{B6D12678-5E09-4AFA-AADA-615619889EBA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenMailtrap.Website", "RavenMailtrap.Website\RavenMailtrap.Website.csproj", "{5647EE72-F95F-476A-BBD9-A0F3318E8A2F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenMailtrap.ForwardingService", "RavenMailtrap.ForwardingService\RavenMailtrap.ForwardingService.csproj", "{842E7B92-FF5E-4EC2-9DE1-4E1042FBB488}"
 EndProject
@@ -30,10 +23,6 @@ Global
 		{B6D12678-5E09-4AFA-AADA-615619889EBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6D12678-5E09-4AFA-AADA-615619889EBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6D12678-5E09-4AFA-AADA-615619889EBA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5647EE72-F95F-476A-BBD9-A0F3318E8A2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5647EE72-F95F-476A-BBD9-A0F3318E8A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5647EE72-F95F-476A-BBD9-A0F3318E8A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5647EE72-F95F-476A-BBD9-A0F3318E8A2F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{842E7B92-FF5E-4EC2-9DE1-4E1042FBB488}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{842E7B92-FF5E-4EC2-9DE1-4E1042FBB488}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{842E7B92-FF5E-4EC2-9DE1-4E1042FBB488}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -20,7 +20,7 @@ namespace RavenMailtrap.Service
 
 
         public RavenPersistenceBehavior()
-            : this(new DocumentStore {ConnectionStringName = "Mailtrap"})
+            : this(RavenDB.DocumentStore)
         {
         }
 
@@ -43,7 +43,6 @@ namespace RavenMailtrap.Service
                     var mailMessage = new Model.Message
                         {
                             From = message.From,
-                            To = message.To,
                             ReceivedDate = message.ReceivedDate,
                             ServerHostName = Dns.GetHostEntry(connection.Session.ClientAddress).HostName.ToLower()
                         };
@@ -80,35 +79,35 @@ namespace RavenMailtrap.Service
 
         private static void MapHeaders(Model.Message mailMessage, MessageHeader headers)
         {
-            mailMessage.Header.Bcc = new List<string>(headers.Bcc.Select(x => x.Raw));
-            mailMessage.Header.Cc = new List<string>(headers.Cc.Select(x => x.Raw));
-            mailMessage.Header.To = new List<string>(headers.To.Select(x => x.Raw));
-            mailMessage.Header.UnknownHeaders = new Dictionary<string, string>();
+            mailMessage.Bcc = new List<string>(headers.Bcc.Select(x => x.Raw));
+            mailMessage.Cc = new List<string>(headers.Cc.Select(x => x.Raw));
+            mailMessage.To = new List<string>(headers.To.Select(x => x.Raw));
+            mailMessage.UnknownHeaders = new Dictionary<string, string>();
             foreach (string key in headers.UnknownHeaders.AllKeys)
             {
-                mailMessage.Header.UnknownHeaders[key] = headers.UnknownHeaders[key];
+                mailMessage.UnknownHeaders[key] = headers.UnknownHeaders[key];
             }
-            mailMessage.Header.ContentDescription = headers.ContentDescription;
-            mailMessage.Header.ContentDisposition = headers.ContentDisposition;
-            mailMessage.Header.ContentId = headers.ContentId;
-            mailMessage.Header.ContentTransferEncoding = string.Format("{0}", headers.ContentTransferEncoding);
-            mailMessage.Header.ContentType = headers.ContentType;
-            mailMessage.Header.Date = headers.Date;
-            mailMessage.Header.DateSent = headers.DateSent;
-            mailMessage.Header.DispositionNotificationTo =
+            mailMessage.ContentDescription = headers.ContentDescription;
+            mailMessage.ContentDisposition = headers.ContentDisposition;
+            mailMessage.ContentId = headers.ContentId;
+            mailMessage.ContentTransferEncoding = string.Format("{0}", headers.ContentTransferEncoding);
+            mailMessage.ContentType = headers.ContentType;
+            mailMessage.Date = headers.Date;
+            mailMessage.DateSent = headers.DateSent;
+            mailMessage.DispositionNotificationTo =
                 new List<string>(headers.DispositionNotificationTo.Select(x => x.Raw));
-            mailMessage.Header.From = headers.From.Raw;
-            mailMessage.Header.Importance = headers.Importance;
-            mailMessage.Header.InReplyTo = headers.InReplyTo;
-            mailMessage.Header.Keywords = headers.Keywords;
-            mailMessage.Header.MessageId = headers.MessageId;
-            mailMessage.Header.MimeVersion = headers.MimeVersion;
-            mailMessage.Header.Received = new List<string>(headers.Received.Select(x => x.Raw));
-            mailMessage.Header.References = headers.References;
-            mailMessage.Header.ReplyTo = headers.ReplyTo != null ? headers.ReplyTo.Raw : null;
-            mailMessage.Header.ReturnPath = headers.ReturnPath != null ? headers.ReturnPath.Raw : null;
-            mailMessage.Header.Sender = headers.Sender != null ? headers.Sender.Raw : null;
-            mailMessage.Header.Subject = headers.Subject;
+            mailMessage.From = headers.From.Raw;
+            mailMessage.Importance = headers.Importance;
+            mailMessage.InReplyTo = headers.InReplyTo;
+            mailMessage.Keywords = headers.Keywords;
+            mailMessage.MessageId = headers.MessageId;
+            mailMessage.MimeVersion = headers.MimeVersion;
+            mailMessage.Received = new List<string>(headers.Received.Select(x => x.Raw));
+            mailMessage.References = headers.References;
+            mailMessage.ReplyTo = headers.ReplyTo != null ? headers.ReplyTo.Raw : null;
+            mailMessage.ReturnPath = headers.ReturnPath != null ? headers.ReturnPath.Raw : null;
+            mailMessage.Sender = headers.Sender != null ? headers.Sender.Raw : null;
+            mailMessage.Subject = headers.Subject;
         }
     }
 }

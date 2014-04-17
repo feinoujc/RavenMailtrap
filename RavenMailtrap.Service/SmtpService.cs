@@ -5,7 +5,7 @@ using Rnwood.SmtpServer;
 
 namespace RavenMailtrap.Service
 {
-    public class SmtpService : IDisposable
+    public class SmtpService : IStartAndStop , IDisposable
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private Server _server;
