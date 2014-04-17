@@ -3,6 +3,6 @@ RavenMailtrap
 
 A windows service that acts as an SMTP server and captures all emails, storing them in RavenDb. 
 
-Provides a ASP.NET UI to show all the emails stored in RavenDb
+Provides a simple, angularjs ui to view the inbox. 
 
-Useful for integration environments where you do not actually want emails to be sent.
+To run, run RavenMailtrap.Service (can also be installed as a windows service). By default, the ui can be viewed at http://localhost:8081/
