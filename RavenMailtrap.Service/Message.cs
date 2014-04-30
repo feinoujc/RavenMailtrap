@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using System.Net.Mime;
 
-namespace RavenMailtrap.Model
+namespace RavenMailtrap
 {
     public class Message
     {
         public string Id { get; set; }
 
         public DateTime ReceivedDate { get; set; }
-       
+
         public string ServerHostName { get; set; }
 
         /// <summary>

@@ -7,11 +7,10 @@ using NLog;
 using OpenPop.Mime.Header;
 using Raven.Client;
 using Raven.Client.Connection;
-using Raven.Client.Document;
 using Raven.Json.Linq;
 using Rnwood.SmtpServer;
 
-namespace RavenMailtrap.Service
+namespace RavenMailtrap
 {
     public class RavenPersistenceBehavior : DefaultServerBehaviour
     {
@@ -27,25 +26,24 @@ namespace RavenMailtrap.Service
         public RavenPersistenceBehavior(IDocumentStore documentStore)
         {
             _documentStore = documentStore;
-            _documentStore.Initialize();
         }
 
 
-        public override void OnMessageReceived(IConnection connection, Message message)
+        public override void OnMessageReceived(IConnection connection, Rnwood.SmtpServer.Message message)
         {
             try
             {
                 Log.Info("Received message address from {0} with client address {1}", message.From,
-                         connection.Session.ClientAddress);
+                    connection.Session.ClientAddress);
 
                 using (IDocumentSession session = _documentStore.OpenSession())
                 {
-                    var mailMessage = new Model.Message
-                        {
-                            From = message.From,
-                            ReceivedDate = message.ReceivedDate,
-                            ServerHostName = Dns.GetHostEntry(connection.Session.ClientAddress).HostName.ToLower()
-                        };
+                    var mailMessage = new Message
+                    {
+                        From = message.From,
+                        ReceivedDate = message.ReceivedDate,
+                        ServerHostName = Dns.GetHostEntry(connection.Session.ClientAddress).HostName.ToLower()
+                    };
                     using (Stream msgStream = message.GetData())
                     {
                         MessageHeader headers = OpenPop.Mime.Message.Load(msgStream).Headers;
@@ -55,7 +53,7 @@ namespace RavenMailtrap.Service
 
                         session.Store(mailMessage);
                         Log.Info("Stored message {0} in raven. Original message id {1}", mailMessage.Id,
-                                 headers.MessageId);
+                            headers.MessageId);
                         IDatabaseCommands dbCommands = _documentStore.DatabaseCommands;
 
                         var optionalMetaData = new RavenJObject();
@@ -63,7 +61,8 @@ namespace RavenMailtrap.Service
                         msgStream.Seek(0, SeekOrigin.Begin);
                         dbCommands.PutAttachment(mailMessage.Id, null, msgStream, optionalMetaData);
 
-                        session.Advanced.GetMetadataFor(mailMessage)["Raven-Cascade-Delete-Attachments"] = RavenJToken.FromObject(new[] { mailMessage.Id });
+                        session.Advanced.GetMetadataFor(mailMessage)["Raven-Cascade-Delete-Attachments"] =
+                            RavenJToken.FromObject(new[] {mailMessage.Id});
 
                         session.SaveChanges();
                     }
@@ -71,13 +70,13 @@ namespace RavenMailtrap.Service
             }
             catch (Exception e)
             {
-                Log.ErrorException("Failed to store message", e);
+                Log.LogException(LogLevel.Error, "Failed to store message", e);
             }
 
             base.OnMessageReceived(connection, message);
         }
 
-        private static void MapHeaders(Model.Message mailMessage, MessageHeader headers)
+        private static void MapHeaders(Message mailMessage, MessageHeader headers)
         {
             mailMessage.Bcc = new List<string>(headers.Bcc.Select(x => x.Raw));
             mailMessage.Cc = new List<string>(headers.Cc.Select(x => x.Raw));

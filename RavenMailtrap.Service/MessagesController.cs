@@ -13,9 +13,8 @@ using HtmlAgilityPack;
 using OpenPop.Mime;
 using Raven.Abstractions.Data;
 using Raven.Client;
-using Message = RavenMailtrap.Model.Message;
 
-namespace RavenMailtrap.Service
+namespace RavenMailtrap
 {
     [RoutePrefix("api/messages")]
     public class MessagesController : ApiController
@@ -35,7 +34,7 @@ namespace RavenMailtrap.Service
         {
             return await Session.Query<Message>()
                 .OrderByDescending(x => x.ReceivedDate)
-                .Skip(page * PageSize)
+                .Skip(page*PageSize)
                 .Take(PageSize).ToListAsync();
         }
 
@@ -131,7 +130,7 @@ namespace RavenMailtrap.Service
                 {
                     break;
                 }
-                await Task.Delay(2 * 1000);
+                await Task.Delay(2*1000);
                 retries++;
             }
             if (email != null)

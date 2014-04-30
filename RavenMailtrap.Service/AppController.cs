@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Http;
 
-namespace RavenMailtrap.Service
+namespace RavenMailtrap
 {
     [RoutePrefix("")]
     public class AppController : ApiController
@@ -30,7 +29,8 @@ namespace RavenMailtrap.Service
                     var sha = MD5.Create();
                     byte[] hash = sha.ComputeHash(stream);
 
-                    var etag = new EntityTagHeaderValue("\"" + BitConverter.ToString(hash).Replace("-", String.Empty) + "\"");
+                    var etag =
+                        new EntityTagHeaderValue("\"" + BitConverter.ToString(hash).Replace("-", String.Empty) + "\"");
 
                     HttpHeaderValueCollection<EntityTagHeaderValue> headers = Request.Headers.IfNoneMatch;
                     if (headers.Count > 0 && headers.Any(x => x.Tag == etag.Tag))

@@ -5,9 +5,8 @@ using NLog;
 using Quartz;
 using Raven.Abstractions.Data;
 using Raven.Client.Indexes;
-using RavenMailtrap.Model;
 
-namespace RavenMailtrap.Service
+namespace RavenMailtrap
 {
     public class PurgeOldMessagesJob : IJob
     {
@@ -24,20 +23,18 @@ namespace RavenMailtrap.Service
                     new IndexDefinitionBuilder<Message>
                     {
                         Map = documents => documents.Where(m => m.ReceivedDate.AddDays(7) <= DateTime.Today)
-                            .Select(entity => new { })
+                            .Select(entity => new {})
                     }, overwrite: true);
 
                 //let the index (re)build
                 await Task.Delay(TimeSpan.FromSeconds(30));
                 RavenDB.DocumentStore.DatabaseCommands.DeleteByIndex(indexName,
                     new IndexQuery());
-
             }
             catch (Exception e)
             {
-                Log.ErrorException("Could not delete week old email.", e);
+                Log.LogException(LogLevel.Error, "Could not delete week old email.", e);
             }
-           
         }
 
         public async void Execute(IJobExecutionContext context)

@@ -1,6 +1,5 @@
 using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,9 +12,9 @@ using Newtonsoft.Json.Serialization;
 using NLog;
 using Owin;
 
-namespace RavenMailtrap.Service
+namespace RavenMailtrap
 {
-    internal class MessagesApi:IStartAndStop
+    internal class MessagesApi : IStartAndStop
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private IDisposable webApp;
@@ -36,7 +35,6 @@ namespace RavenMailtrap.Service
                 Log.Error("Failed to start web api", e);
                 throw;
             }
-           
         }
 
         public void Stop()
@@ -55,34 +53,32 @@ namespace RavenMailtrap.Service
             public void Configuration(IAppBuilder appBuilder)
             {
                 var config = new HttpConfiguration();
-                config.Services.Add(typeof(IExceptionLogger), new TraceExceptionLogger());                
+                config.Services.Add(typeof (IExceptionLogger), new NLogExceptionLogger());
                 MediaTypeFormatterCollection formatters = config.Formatters;
                 JsonMediaTypeFormatter jsonFormatter = formatters.JsonFormatter;
                 JsonSerializerSettings settings = jsonFormatter.SerializerSettings;
                 settings.Formatting = Formatting.Indented;
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 config.MapHttpAttributeRoutes();
-                config.EnableCors(new EnableCorsAttribute("*", "*", "GET"));
-
+            
                 appBuilder.UseWebApi(config);
                 config.EnsureInitialized();
             }
         }
 
-        class TraceExceptionLogger : ExceptionLogger
+        private class NLogExceptionLogger : ExceptionLogger
         {
             private static readonly Logger Logger = LogManager.GetLogger("WebApi");
 
             public override Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
             {
-                Logger.ErrorException(context.Exception.Message, context.Exception);
+                Logger.LogException(LogLevel.Error, context.Exception.Message, context.Exception);
                 return base.LogAsync(context, cancellationToken);
-
             }
 
             public override void Log(ExceptionLoggerContext context)
             {
-                Logger.ErrorException(context.Exception.Message, context.Exception);
+                Logger.LogException(LogLevel.Error, context.Exception.Message, context.Exception);
                 base.Log(context);
             }
 

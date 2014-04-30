@@ -1,4 +1,4 @@
-﻿namespace RavenMailtrap.Service
+﻿namespace RavenMailtrap
 {
     public interface IStartAndStop
     {

@@ -1,6 +1,6 @@
 ﻿using Raven.Abstractions.Extensions;
 
-namespace RavenMailtrap.Service
+namespace RavenMailtrap
 {
     public class CompositeService : IStartAndStop
     {
@@ -13,7 +13,7 @@ namespace RavenMailtrap.Service
 
         public void Start()
         {
-            _services.ForEach(x=>x.Start());
+            _services.ForEach(x => x.Start());
         }
 
         public void Stop()

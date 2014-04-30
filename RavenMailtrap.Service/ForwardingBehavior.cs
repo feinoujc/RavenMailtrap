@@ -4,13 +4,13 @@ using System.Net.Mail;
 using NLog;
 using Rnwood.SmtpServer;
 
-namespace RavenMailtrap.Service
+namespace RavenMailtrap
 {
     public class ForwardingBehavior : DefaultServerBehaviour
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public override void OnMessageReceived(IConnection connection, Message message)
+        public override void OnMessageReceived(IConnection connection, Rnwood.SmtpServer.Message message)
         {
             try
             {
@@ -22,7 +22,7 @@ namespace RavenMailtrap.Service
                 SmtpClient client = null;
                 try
                 {
-                    client = new SmtpClient(); 
+                    client = new SmtpClient();
                     client.Send(message2.ToMailMessage());
                 }
                 finally
