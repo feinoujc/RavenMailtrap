@@ -1,12 +1,18 @@
 using System;
 using System.Configuration;
+using System.IO;
 using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.ExceptionHandling;
+using Microsoft.Owin;
+using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.Hosting;
+using Microsoft.Owin.StaticFiles;
+using Microsoft.Owin.StaticFiles.ContentTypes;
+using Microsoft.Owin.StaticFiles.Infrastructure;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NLog;
@@ -14,14 +20,14 @@ using Owin;
 
 namespace RavenMailtrap
 {
-    internal class MessagesApi : IStartAndStop
+    internal class WebServer : IStartAndStop
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private IDisposable webApp;
 
         public void Start()
         {
-            string baseAddress = ConfigurationManager.AppSettings["ApiBaseAddress"] ?? "http://localhost:8081";
+            string baseAddress = ConfigurationManager.AppSettings["ServerHostAddress"] ?? "http://localhost:8081";
 
 
             // Start OWIN host 
@@ -60,7 +66,16 @@ namespace RavenMailtrap
                 settings.Formatting = Formatting.Indented;
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 config.MapHttpAttributeRoutes();
-            
+
+                var clientOptions = new FileServerOptions
+                {
+                    RequestPath = new PathString(""),
+                    FileSystem = new PhysicalFileSystem("static"),
+                    EnableDefaultFiles = true
+                };
+                clientOptions.DefaultFilesOptions.DefaultFileNames.Add("index.html");
+
+                appBuilder.UseFileServer(clientOptions);
                 appBuilder.UseWebApi(config);
                 config.EnsureInitialized();
             }

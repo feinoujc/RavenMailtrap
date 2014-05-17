@@ -20,7 +20,7 @@ namespace RavenMailtrap
             {
                 host.Service<CompositeService>(service =>
                 {
-                    service.ConstructUsing(name => new CompositeService(new MessagesApi(), new SmtpService()));
+                    service.ConstructUsing(name => new CompositeService(new WebServer(), new SmtpService()));
                     service.WhenStarted(tc => tc.Start());
                     service.WhenStopped(tc => tc.Stop());
                     service.WhenPaused(tc => tc.Stop());
