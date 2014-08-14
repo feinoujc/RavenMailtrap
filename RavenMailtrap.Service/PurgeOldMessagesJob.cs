@@ -33,7 +33,7 @@ namespace RavenMailtrap
             }
             catch (Exception e)
             {
-                Log.LogException(LogLevel.Error, "Could not delete week old email.", e);
+                Log.Log(LogLevel.Error, "Could not delete week old email.", e);
             }
         }
 

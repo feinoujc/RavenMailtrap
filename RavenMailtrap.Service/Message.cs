@@ -11,8 +11,6 @@ namespace RavenMailtrap
 
         public DateTime ReceivedDate { get; set; }
 
-        public string ServerHostName { get; set; }
-
         /// <summary>
         ///     All headers which were not recognized and explicitly dealt with.<br />
         ///     This should mostly be custom headers, which are marked as X-[name].<br />

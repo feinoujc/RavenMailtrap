@@ -87,13 +87,13 @@ namespace RavenMailtrap
 
             public override Task LogAsync(ExceptionLoggerContext context, CancellationToken cancellationToken)
             {
-                Logger.LogException(LogLevel.Error, context.Exception.Message, context.Exception);
+                Logger.Log(LogLevel.Error, context.Exception.Message, context.Exception);
                 return base.LogAsync(context, cancellationToken);
             }
 
             public override void Log(ExceptionLoggerContext context)
             {
-                Logger.LogException(LogLevel.Error, context.Exception.Message, context.Exception);
+                Logger.Log(LogLevel.Error, context.Exception.Message, context.Exception);
                 base.Log(context);
             }
 

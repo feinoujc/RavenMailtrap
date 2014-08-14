@@ -48,8 +48,9 @@
     <Reference Include="OpenPop">
       <HintPath>..\packages\OpenPop.NET.2.0.4.369\lib\net20\OpenPop.dll</HintPath>
     </Reference>
-    <Reference Include="Rnwood.SmtpServer">
-      <HintPath>..\packages\Rnwood.SmtpServer.2.0.5.1\lib\net20\Rnwood.SmtpServer.dll</HintPath>
+    <Reference Include="Rnwood.SmtpServer, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Rnwood.SmtpServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
