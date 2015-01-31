@@ -50,6 +50,7 @@ namespace RavenMailtrap
         [Route("{id:int}/html")]
         public HttpResponseMessage GetMailHtmlContent(int id)
         {
+            
             Attachment attachment = Store.DatabaseCommands.GetAttachment("messages/" + id);
             if (attachment == null)
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "no attachment");

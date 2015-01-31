@@ -13,6 +13,7 @@ namespace RavenMailtrap
         {
             var store = new EmbeddableDocumentStore {DataDirectory = "Data"};
             store.Initialize();
+          
             return store;
         });
 
